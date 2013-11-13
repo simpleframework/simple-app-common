@@ -1,7 +1,6 @@
 package net.simpleframework.app;
 
 import java.util.Collection;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -14,8 +13,6 @@ import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleContext;
 import net.simpleframework.ctx.ModuleContextFactory;
 import net.simpleframework.ctx.permission.IPermissionHandler;
-import net.simpleframework.ctx.script.IScriptEval;
-import net.simpleframework.ctx.script.ScriptEvalFactory;
 import net.simpleframework.ctx.task.ITaskExecutor;
 import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.ITemplateHandler;
@@ -70,11 +67,6 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		 * 获取任务接口
 		 */
 		return getContextSettings().getTaskExecutor();
-	}
-
-	@Override
-	public IScriptEval createScriptEval(final Map<String, Object> variables) {
-		return ScriptEvalFactory.createDefaultScriptEval(variables);
 	}
 
 	@Override
