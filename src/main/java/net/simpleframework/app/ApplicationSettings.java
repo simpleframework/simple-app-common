@@ -90,6 +90,7 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 	public static final String CTX_CHARSET = "ctx.charset";
 	public static final String CTX_RESOURCECOMPRESS = "ctx.resourcecompress";
 	public static final String CTX_PERMISSIONHANDLER = "ctx.permissionhandler";
+	public static final String CTX_DEBUG = "ctx.debug";
 
 	public static final String MVC_FILTERPATH = "mvc.filterpath";
 	public static final String MVC_LOGINPATH = "mvc.loginpath";
@@ -105,6 +106,11 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 		@Override
 		public File getHomeFileDir() {
 			return settings.homeDir != null ? settings.homeDir : super.getHomeFileDir();
+		}
+
+		@Override
+		public boolean isDebug() {
+			return settings.getBoolProperty(CTX_DEBUG, super.isDebug());
 		}
 
 		@Override
