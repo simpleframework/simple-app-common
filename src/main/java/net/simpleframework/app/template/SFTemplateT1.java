@@ -3,6 +3,7 @@ package net.simpleframework.app.template;
 import java.io.IOException;
 import java.util.Map;
 
+import net.simpleframework.common.web.html.HtmlConst;
 import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.IMVCConst;
 import net.simpleframework.mvc.PageParameter;
@@ -67,10 +68,10 @@ public class SFTemplateT1 extends AbstractTemplateHandlerT1 implements ISFTempla
 		sb.append(" </div>");
 		sb.append(BlockElement.CLEAR);
 		sb.append("</div>");
-		sb.append(TAG_SCRIPT_START);
+		sb.append(HtmlConst.TAG_SCRIPT_START);
 		sb.append("$ready(function() { $('idSFTemplateT1_loadTime').innerHTML = document.getCookie('")
 				.append(IMVCConst.COOKIE_PAGELOAD_TIME).append("'); });");
-		sb.append(TAG_SCRIPT_END);
+		sb.append(HtmlConst.TAG_SCRIPT_END);
 		return sb.toString();
 	}
 
