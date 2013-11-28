@@ -70,7 +70,7 @@ public class SFTemplateT1 extends AbstractTemplateHandlerT1 implements ISFTempla
 		sb.append("</div>");
 		sb.append(HtmlConst.TAG_SCRIPT_START);
 		sb.append("$ready(function() { $('idSFTemplateT1_loadTime').innerHTML = document.getCookie('")
-				.append(IMVCConst.COOKIE_PAGELOAD_TIME).append("'); });");
+				.append(IMVCConst.PAGELOAD_TIME).append("'); });");
 		sb.append(HtmlConst.TAG_SCRIPT_END);
 		return sb.toString();
 	}
