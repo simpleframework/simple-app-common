@@ -53,6 +53,16 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 	}
 
 	@Override
+	public <T extends IModuleContext> T getModuleContext(final Class<T> mClass) {
+		return ModuleContextFactory.get(mClass);
+	}
+
+	@Override
+	public IModuleContext getModuleContext(final String module) {
+		return ModuleContextFactory.get(module);
+	}
+
+	@Override
 	public DataSource getDataSource() {
 		/**
 		 * 定义数据源,每个ModuleContext可以设置自己的数据源
