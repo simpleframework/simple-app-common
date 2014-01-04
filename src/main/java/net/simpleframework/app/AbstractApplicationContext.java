@@ -92,14 +92,6 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 	}
 
 	@Override
-	public String[] getScanPackageNames() {
-		/**
-		 * 这里覆盖你要扫描的资源包
-		 */
-		return new String[] { "net.simpleframework" };
-	}
-
-	@Override
 	public int getDomain() {
 		return 0;
 	}
