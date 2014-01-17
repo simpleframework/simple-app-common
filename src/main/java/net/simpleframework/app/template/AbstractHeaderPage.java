@@ -33,7 +33,7 @@ public abstract class AbstractHeaderPage extends AbstractEditAwarePage {
 		sb.append(" var sup = $('").append(selector).append("'); if (!sup) return;");
 		sb.append(" var i = 0;");
 		sb.append(" var sh = setInterval(function() {");
-		sb.append("  sup.$shake({ distance: 4 });");
+		sb.append("  $Effect.shake(sup, { distance: 4 });");
 		sb.append("  if (i++ > 10) clearInterval(sh);");
 		sb.append(" }, 2000);");
 		sb.append("});");
