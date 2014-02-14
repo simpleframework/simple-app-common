@@ -2,6 +2,7 @@ package net.simpleframework.app;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -139,7 +140,7 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 		}
 
 		@Override
-		public ParameterMap getFilterPackages() {
+		public Map<String, String> getFilterPackages() {
 			return packages;
 		}
 
