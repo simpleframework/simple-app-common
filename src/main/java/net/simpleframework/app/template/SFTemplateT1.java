@@ -63,7 +63,7 @@ public class SFTemplateT1 extends AbstractTemplateHandlerT1 implements ISFTempla
 		sb.append("	<div class='lr'>");
 		sb.append(CHROME_LINK).append(", ").append(FIREFOX_LINK);
 		sb.append("#(FooterPage.0) [ ").append(
-				new SpanElement().setId("idSFTemplateT1_loadTime").setStyle("color: #900;"));
+				new SpanElement().setId("idSFTemplateT1_loadTime").addStyle("color: #900;"));
 		sb.append("&nbsp;s ]");
 		sb.append(" </div>");
 		sb.append(BlockElement.CLEAR);
