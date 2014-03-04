@@ -47,17 +47,17 @@ public class SFTemplateT1 extends AbstractTemplateHandlerT1 implements ISFTempla
 
 	protected String toHeaderHtml(final PageParameter pp) {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("<div class='HeaderPageT1'>");
+		// sb.append("<div class='HeaderPageT1'>");
 		sb.append(" <div class='logo'></div>");
 		sb.append(" <div class='re'>Menu</div>");
 		sb.append(BlockElement.CLEAR);
-		sb.append("</div>");
+		// sb.append("</div>");
 		return sb.toString();
 	}
 
 	protected String toFooterHTML(final PageParameter pp) {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("<div class='FooterPageT1'>");
+		// sb.append("<div class='FooterPageT1'>");
 		sb.append(" <div class='ll'>");
 		sb.append(SF_LINK).append("</div>");
 		sb.append("	<div class='lr'>");
@@ -67,7 +67,7 @@ public class SFTemplateT1 extends AbstractTemplateHandlerT1 implements ISFTempla
 		sb.append("&nbsp;s ]");
 		sb.append(" </div>");
 		sb.append(BlockElement.CLEAR);
-		sb.append("</div>");
+		// sb.append("</div>");
 		sb.append(HtmlConst.TAG_SCRIPT_START);
 		sb.append("$ready(function() { $('idSFTemplateT1_loadTime').innerHTML = document.getCookie('")
 				.append(IMVCConst.PAGELOAD_TIME).append("'); });");
