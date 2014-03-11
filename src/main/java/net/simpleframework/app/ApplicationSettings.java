@@ -2,6 +2,7 @@ package net.simpleframework.app;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -9,7 +10,6 @@ import javax.sql.DataSource;
 import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.ClassUtils;
 import net.simpleframework.common.StringUtils;
-import net.simpleframework.common.coll.ParameterMap;
 import net.simpleframework.ctx.IApplicationContextBase;
 import net.simpleframework.ctx.settings.PropertiesContextSettings;
 import net.simpleframework.ctx.task.ITaskExecutor;
@@ -144,7 +144,7 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 			return packages;
 		}
 
-		private final ParameterMap packages = new ParameterMap();
+		private final Map<String, String> packages = new LinkedHashMap<String, String>();
 		{
 			packages.put("/sf", "net.simpleframework");
 		}
