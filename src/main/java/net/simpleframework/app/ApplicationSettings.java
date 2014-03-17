@@ -96,6 +96,7 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 	public static final String MVC_FILTERPATH = "mvc.filterpath";
 	public static final String MVC_LOGINPATH = "mvc.loginpath";
 	public static final String MVC_HOMEPATH = "mvc.homepath";
+	public static final String MVC_IEWARNPATH = "mvc.iewarnpath";
 
 	public static class _MVCSettings extends MVCSettings {
 		private final ApplicationSettings settings;
@@ -137,6 +138,11 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 		@Override
 		public String getFilterPath() {
 			return settings.getProperty(MVC_FILTERPATH, super.getFilterPath());
+		}
+
+		@Override
+		public String getIEWarnPath(final PageRequestResponse rRequest) {
+			return settings.getProperty(MVC_IEWARNPATH, super.getIEWarnPath(rRequest));
 		}
 
 		@Override
