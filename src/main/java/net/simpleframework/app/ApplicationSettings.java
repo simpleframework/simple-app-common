@@ -59,11 +59,8 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 			try {
 				dataSource = (DataSource) ClassUtils.forName(getProperty(DBPOOL_PROVIDER))
 						.newInstance();
-				final String[] props = StringUtils.split(getProperty(DBPOOL_PROPERTIES));
-				if (props != null) {
-					for (final String prop : props) {
-						BeanUtils.setProperty(dataSource, prop, getProperty(DBPOOL + "." + prop));
-					}
+				for (final String prop : StringUtils.split(getProperty(DBPOOL_PROPERTIES))) {
+					BeanUtils.setProperty(dataSource, prop, getProperty(DBPOOL + "." + prop));
 				}
 			} catch (final Exception e) {
 				log.error(e);
