@@ -18,6 +18,8 @@ import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.ITemplateHandler;
 import net.simpleframework.mvc.MVCContext;
 import net.simpleframework.mvc.PageParameter;
+import net.simpleframework.mvc.template.t1.ITemplateHandlerT1;
+import net.simpleframework.mvc.template.t2.ITemplateHandlerT2;
 import net.simpleframework.mvc.template.t2.T2TemplatePage;
 
 /**
@@ -42,9 +44,17 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		 * 这个方法的作用是提供模板的Handler,前提是用simple缺省提供的2套模板,如果自己写模板,就没有意义了
 		 */
 		if (AbstractMVCPage.get(pp) instanceof T2TemplatePage) {
-			return singleton(SFTemplateT2.class);
+			return singleton(getT2TemplateHandler());
 		}
-		return singleton(SFTemplateT1.class);
+		return singleton(getT1TemplateHandler());
+	}
+
+	protected Class<? extends ITemplateHandlerT1> getT1TemplateHandler() {
+		return SFTemplateT1.class;
+	}
+
+	protected Class<? extends ITemplateHandlerT2> getT2TemplateHandler() {
+		return SFTemplateT2.class;
 	}
 
 	@Override
