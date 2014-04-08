@@ -4,6 +4,9 @@
   height: 60px;
   border-bottom: 3px solid #456;
   text-align: left;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 #resized_header * {
