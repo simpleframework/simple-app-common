@@ -78,7 +78,7 @@ public class SFTemplateT1 extends AbstractTemplateHandlerT1 implements ISFTempla
 		@Override
 		protected String toHtml(final PageParameter pp, final Map<String, Object> variables,
 				final String currentVariable) throws IOException {
-			return ((SFTemplateT1) ctx.getTemplate(pp)).toHeaderHtml(pp);
+			return ((SFTemplateT1) AbstractTemplateHandlerT1.get()).toHeaderHtml(pp);
 		}
 	}
 
@@ -87,7 +87,7 @@ public class SFTemplateT1 extends AbstractTemplateHandlerT1 implements ISFTempla
 		@Override
 		protected String toHtml(final PageParameter pp, final Map<String, Object> variables,
 				final String currentVariable) throws IOException {
-			return ((SFTemplateT1) ctx.getTemplate(pp)).toFooterHTML(pp);
+			return ((SFTemplateT1) AbstractTemplateHandlerT1.get()).toFooterHTML(pp);
 		}
 	}
 }

@@ -19,7 +19,6 @@ import net.simpleframework.mvc.template.t2.AbstractTemplateHandlerT2;
  *         http://www.simpleframework.net
  */
 public class SFTemplateT2 extends AbstractTemplateHandlerT2 implements ISFTemplateConst {
-
 	@Override
 	public Class<? extends AbstractMVCPage> getHeaderPage() {
 		return HeaderPageT2.class;
@@ -65,7 +64,7 @@ public class SFTemplateT2 extends AbstractTemplateHandlerT2 implements ISFTempla
 		@Override
 		protected String toHtml(final PageParameter pp, final Map<String, Object> variables,
 				final String currentVariable) throws IOException {
-			return ((SFTemplateT2) ctx.getTemplate(pp)).toHeaderHtml(pp);
+			return ((SFTemplateT2) AbstractTemplateHandlerT2.get()).toHeaderHtml(pp);
 		}
 	}
 
@@ -74,7 +73,7 @@ public class SFTemplateT2 extends AbstractTemplateHandlerT2 implements ISFTempla
 		@Override
 		protected String toHtml(final PageParameter pp, final Map<String, Object> variables,
 				final String currentVariable) throws IOException {
-			return ((SFTemplateT2) ctx.getTemplate(pp)).toFooterHTML(pp);
+			return ((SFTemplateT2) AbstractTemplateHandlerT2.get()).toFooterHTML(pp);
 		}
 	}
 }

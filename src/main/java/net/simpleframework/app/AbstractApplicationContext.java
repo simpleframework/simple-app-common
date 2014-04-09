@@ -6,21 +6,13 @@ import javax.sql.DataSource;
 
 import net.simpleframework.ado.IADOManagerFactory;
 import net.simpleframework.ado.db.DbManagerFactory;
-import net.simpleframework.app.template.SFTemplateT1;
-import net.simpleframework.app.template.SFTemplateT2;
 import net.simpleframework.common.ClassUtils;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleContext;
 import net.simpleframework.ctx.ModuleContextFactory;
 import net.simpleframework.ctx.permission.IPermissionHandler;
 import net.simpleframework.ctx.task.ITaskExecutor;
-import net.simpleframework.mvc.AbstractMVCPage;
-import net.simpleframework.mvc.ITemplateHandler;
 import net.simpleframework.mvc.MVCContext;
-import net.simpleframework.mvc.PageParameter;
-import net.simpleframework.mvc.template.t1.ITemplateHandlerT1;
-import net.simpleframework.mvc.template.t2.ITemplateHandlerT2;
-import net.simpleframework.mvc.template.t2.T2TemplatePage;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -36,25 +28,6 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		 * 定义配置
 		 */
 		return singleton(ApplicationSettings.class);
-	}
-
-	@Override
-	public ITemplateHandler getTemplate(final PageParameter pp) {
-		/**
-		 * 这个方法的作用是提供模板的Handler,前提是用simple缺省提供的2套模板,如果自己写模板,就没有意义了
-		 */
-		if (AbstractMVCPage.get(pp) instanceof T2TemplatePage) {
-			return singleton(getT2TemplateHandler());
-		}
-		return singleton(getT1TemplateHandler());
-	}
-
-	protected Class<? extends ITemplateHandlerT1> getT1TemplateHandler() {
-		return SFTemplateT1.class;
-	}
-
-	protected Class<? extends ITemplateHandlerT2> getT2TemplateHandler() {
-		return SFTemplateT2.class;
 	}
 
 	@Override
