@@ -22,8 +22,12 @@ public abstract class AbstractHeaderPage extends AbstractEditAwarePage {
 		addComponent_logout(pp);
 	}
 
+	protected AbstractElement<?> str_Hello() {
+		return new SpanElement($m("AbstractHeaderPage.0"));
+	}
+
 	public AbstractElement<?> str_User(final PageParameter pp) {
-		return new SpanElement().addElements(new SpanElement($m("AbstractHeaderPage.0")),
+		return new SpanElement().addElements(str_Hello(),
 				new LinkElementEx(pp.getLogin()).setMenuIcon(true));
 	}
 
