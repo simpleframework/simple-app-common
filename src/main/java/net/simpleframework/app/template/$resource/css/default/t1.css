@@ -13,8 +13,12 @@
   color: #fff;
 }
 
+#resized_header a {
+  text-decoration: none;
+}
+
 #resized_header a:hover {
-  color: #fe9;
+  color: #ec9;
 }
 
 #resized_header .logo {
