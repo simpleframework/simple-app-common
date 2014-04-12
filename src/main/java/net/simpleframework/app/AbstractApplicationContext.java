@@ -14,6 +14,8 @@ import net.simpleframework.ctx.permission.IPermissionHandler;
 import net.simpleframework.ctx.task.ITaskExecutor;
 import net.simpleframework.mvc.MVCContext;
 
+import org.hsqldb.Server;
+
 /**
  * Licensed under the Apache License, Version 2.0
  * 
@@ -90,6 +92,32 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 					.getPermissionHandler());
 		} catch (final ClassNotFoundException e) {
 			return super.getPagePermissionHandler();
+		}
+	}
+
+	@Override
+	protected void onApplicationInit() throws Exception {
+		// 启动测试用的hsql数据库,生产环境不需要
+		doHsql();
+		super.onApplicationInit();
+	}
+
+	protected void doHsql() {
+		final ApplicationSettings settings = getContextSettings();
+		if (!settings.getBoolProperty("hsql.start")) {
+			return;
+		}
+		try {
+			System.setProperty("hsqldb.reconfig_logging", "false");
+			final Server svr = new Server();
+			svr.setAddress(settings.getProperty("hsql.address"));
+			svr.setPort(settings.getIntProperty("hsql.port"));
+			svr.setDatabaseName(0, settings.getProperty("hsql.dbname"));
+			svr.setDatabasePath(0, settings.getProperty("hsql.dbpath"));
+			svr.setSilent(true);
+			svr.start();
+		} catch (final Exception e1) {
+			log.warn(e1);
 		}
 	}
 }

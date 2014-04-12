@@ -6,7 +6,7 @@
   <artifactId>simple-app-common</artifactId>
   <version>4.0-SNAPSHOT</version>
   <url>http://simpleframework.net</url>
-  
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -18,7 +18,7 @@
       <email>cknet@126.com</email>
     </developer>
   </developers>
-  
+
   <!--仓库配置 -->
   <repositories>
     <repository>
@@ -43,14 +43,21 @@
       <artifactId>simple-mvc-template</artifactId>
       <version>4.0-SNAPSHOT</version>
     </dependency>
-    
+
     <dependency>
       <groupId>net.simpleframework</groupId>
       <artifactId>simple-module-organization-web</artifactId>
       <version>4.0-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
-    
+
+    <dependency>
+      <groupId>org.hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>2.2.9</version>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- web容器包 -->
     <dependency>
       <groupId>javax.servlet</groupId>
