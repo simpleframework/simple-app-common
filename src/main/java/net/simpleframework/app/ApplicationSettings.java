@@ -81,6 +81,21 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 				"net.simpleframework.mvc.ctx.permission.DefaultPagePermissionHandler");
 	}
 
+	@Override
+	public boolean isDebug() {
+		return getBoolProperty(CTX_DEBUG, super.isDebug());
+	}
+
+	@Override
+	public String getCharset() {
+		return getProperty(CTX_CHARSET, super.getCharset());
+	}
+
+	@Override
+	public String getContextNo() {
+		return getProperty(CTX_NO, super.getContextNo());
+	}
+
 	public static final String DBPOOL = "dbpool";
 	public static final String DBPOOL_PROVIDER = "dbpool.provider";
 	public static final String DBPOOL_PROPERTIES = "dbpool.properties";
@@ -89,6 +104,7 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 	public static final String CTX_RESOURCECOMPRESS = "ctx.resourcecompress";
 	public static final String CTX_PERMISSIONHANDLER = "ctx.permissionhandler";
 	public static final String CTX_DEBUG = "ctx.debug";
+	public static final String CTX_NO = "ctx.no";
 
 	public static final String MVC_FILTERPATH = "mvc.filterpath";
 	public static final String MVC_LOGINPATH = "mvc.loginpath";
@@ -103,23 +119,28 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 		}
 
 		@Override
+		public boolean isDebug() {
+			return settings.isDebug();
+		}
+
+		@Override
+		public String getCharset() {
+			return settings.getCharset();
+		}
+
+		@Override
+		public String getContextNo() {
+			return settings.getContextNo();
+		}
+
+		@Override
 		public File getHomeFileDir() {
 			return settings.homeDir != null ? settings.homeDir : super.getHomeFileDir();
 		}
 
 		@Override
-		public boolean isDebug() {
-			return settings.getBoolProperty(CTX_DEBUG, super.isDebug());
-		}
-
-		@Override
 		public boolean isResourceCompress() {
 			return settings.getBoolProperty(CTX_RESOURCECOMPRESS, super.isResourceCompress());
-		}
-
-		@Override
-		public String getCharset() {
-			return settings.getProperty(CTX_CHARSET, super.getCharset());
 		}
 
 		@Override
