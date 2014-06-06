@@ -1,12 +1,18 @@
 package net.simpleframework.app;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
 import net.simpleframework.ado.IADOManagerFactory;
 import net.simpleframework.ado.db.DbManagerFactory;
+import net.simpleframework.ado.db.IDbEntityManager;
+import net.simpleframework.ado.db.cache.MapDbEntityManager;
 import net.simpleframework.common.ClassUtils;
+import net.simpleframework.common.StringUtils;
+import net.simpleframework.common.object.ObjectFactory;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleContext;
 import net.simpleframework.ctx.ModuleContextFactory;
@@ -68,12 +74,31 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		return getADOManagerFactory(getDataSource());
 	}
 
+	private static Map<DataSource, DbManagerFactory> mFactoryCache = new HashMap<DataSource, DbManagerFactory>();
+
 	@Override
 	public IADOManagerFactory getADOManagerFactory(final DataSource dataSource) {
 		/**
 		 * 这里提供一个全局的IADOManagerFactory实现,各context可有自己的
 		 */
-		return DbManagerFactory.get(dataSource);
+		DbManagerFactory factory = mFactoryCache.get(dataSource);
+		if (factory == null) {
+			mFactoryCache.put(dataSource, factory = new DbManagerFactory(dataSource) {
+				@Override
+				public IDbEntityManager<?> createEntityManager(final Class<?> beanClass) {
+					final String db = getContextSettings().getProperty(
+							ApplicationSettings.DBENTITYMANAGER_HANDLER);
+					if (StringUtils.hasText(db)) {
+						try {
+							return (IDbEntityManager<?>) ObjectFactory.create(ClassUtils.forName(db));
+						} catch (final ClassNotFoundException e) {
+						}
+					}
+					return ObjectFactory.create(MapDbEntityManager.class);
+				}
+			});
+		}
+		return factory;
 	}
 
 	@Override

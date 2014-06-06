@@ -106,6 +106,8 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 	public static final String CTX_DEBUG = "ctx.debug";
 	public static final String CTX_NO = "ctx.no";
 
+	public static final String DBENTITYMANAGER_HANDLER = "db.entitymanager";
+
 	public static final String MVC_SERVERPORT = "mvc.serverport";
 	public static final String MVC_FILTERPATH = "mvc.filterpath";
 	public static final String MVC_LOGINPATH = "mvc.loginpath";
