@@ -86,19 +86,27 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 			mFactoryCache.put(dataSource, factory = new DbManagerFactory(dataSource) {
 				@Override
 				public IDbEntityManager<?> createEntityManager(final Class<?> beanClass) {
+					IDbEntityManager<?> eManager = null;
 					final String db = getContextSettings().getProperty(
 							ApplicationSettings.DBENTITYMANAGER_HANDLER);
 					if (StringUtils.hasText(db)) {
 						try {
-							return (IDbEntityManager<?>) ObjectFactory.create(ClassUtils.forName(db));
+							eManager = (IDbEntityManager<?>) ObjectFactory.create(ClassUtils.forName(db));
 						} catch (final ClassNotFoundException e) {
 						}
 					}
-					return ObjectFactory.create(MapDbEntityManager.class);
+					if (eManager == null) {
+						eManager = ObjectFactory.create(MapDbEntityManager.class);
+					}
+					onCreateEntityManager(eManager);
+					return eManager;
 				}
 			});
 		}
 		return factory;
+	}
+
+	protected void onCreateEntityManager(final IDbEntityManager<?> eManager) {
 	}
 
 	@Override
