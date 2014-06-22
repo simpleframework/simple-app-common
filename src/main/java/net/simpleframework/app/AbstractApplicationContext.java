@@ -107,7 +107,6 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 	}
 
 	protected void onCreateEntityManager(final IDbEntityManager<?> eManager) {
-		System.out.println("-----" + eManager.getClass().getName() + "-----");
 	}
 
 	@Override
