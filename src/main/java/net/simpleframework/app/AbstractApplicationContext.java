@@ -150,7 +150,7 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 			svr.setSilent(true);
 			svr.start();
 		} catch (final Exception e1) {
-			log.warn(e1);
+			getLog().warn(e1);
 		}
 	}
 }

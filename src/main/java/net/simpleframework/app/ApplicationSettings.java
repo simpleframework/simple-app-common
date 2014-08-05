@@ -63,7 +63,7 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 					BeanUtils.setProperty(dataSource, prop, getProperty(DBPOOL + "." + prop));
 				}
 			} catch (final Exception e) {
-				log.error(e);
+				getLog().error(e);
 			}
 		}
 		return dataSource;
