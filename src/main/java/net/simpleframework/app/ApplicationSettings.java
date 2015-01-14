@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.ClassUtils;
 import net.simpleframework.common.StringUtils;
+import net.simpleframework.common.SymmetricEncrypt;
 import net.simpleframework.ctx.IApplicationContextBase;
 import net.simpleframework.ctx.settings.PropertiesContextSettings;
 import net.simpleframework.ctx.task.ITaskExecutor;
@@ -54,13 +55,33 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 		return new _MVCSettings(this);
 	}
 
+	private final SymmetricEncrypt des = createEncrypt();
+
+	protected SymmetricEncrypt createEncrypt() {
+		return new SymmetricEncrypt("simpleframework.net");
+	}
+
+	public static void main(final String[] args) {
+		final SymmetricEncrypt des = new SymmetricEncrypt("simpleframework.net");
+		// test...
+		System.out.println(des.encrypt("root"));
+		System.out.println(des.encrypt("root"));
+	}
+
 	public DataSource getDataSource() {
 		if (dataSource == null) {
 			try {
 				dataSource = (DataSource) ClassUtils.forName(getProperty(DBPOOL_PROVIDER))
 						.newInstance();
-				for (final String prop : StringUtils.split(getProperty(DBPOOL_PROPERTIES))) {
-					BeanUtils.setProperty(dataSource, prop, getProperty(DBPOOL + "." + prop));
+				for (String prop : StringUtils.split(getProperty(DBPOOL_PROPERTIES))) {
+					String val;
+					if (prop.startsWith("#")) {
+						prop = prop.substring(1);
+						val = des.decrypt(getProperty(DBPOOL + "." + prop));
+					} else {
+						val = getProperty(DBPOOL + "." + prop);
+					}
+					BeanUtils.setProperty(dataSource, prop, val);
 				}
 			} catch (final Exception e) {
 				getLog().error(e);
