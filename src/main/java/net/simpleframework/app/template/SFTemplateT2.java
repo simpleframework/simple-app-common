@@ -5,7 +5,6 @@ import java.util.Map;
 
 import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.PageParameter;
-import net.simpleframework.mvc.common.element.BlockElement;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ui.menu.MenuItem;
 import net.simpleframework.mvc.component.ui.menu.MenuItems;
@@ -38,10 +37,9 @@ public class SFTemplateT2 extends AbstractTemplateHandlerT2 implements ISFTempla
 
 	protected String toHeaderHtml(final PageParameter pp) {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("<div class='HeaderPageT2'>");
+		sb.append("<div class='HeaderPageT2 clearfix'>");
 		sb.append(" <div class='logo'></div>");
 		sb.append(" <div class='re'>Menu</div>");
-		sb.append(BlockElement.CLEAR);
 		sb.append("</div>");
 		return sb.toString();
 	}
