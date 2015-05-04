@@ -2,8 +2,6 @@ package net.simpleframework.app;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -11,12 +9,14 @@ import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.ClassUtils;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.SymmetricEncrypt;
-import net.simpleframework.ctx.IApplicationContextBase;
+import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.settings.PropertiesContextSettings;
 import net.simpleframework.ctx.task.ITaskExecutor;
 import net.simpleframework.ctx.task.TaskExecutor;
+import net.simpleframework.mvc.IMVCContext;
 import net.simpleframework.mvc.IMVCContextVar;
 import net.simpleframework.mvc.MVCSettings;
+import net.simpleframework.mvc.MVCUtils;
 import net.simpleframework.mvc.PageRequestResponse;
 
 /**
@@ -26,39 +26,35 @@ import net.simpleframework.mvc.PageRequestResponse;
  *         http://www.simpleframework.net
  */
 public class ApplicationSettings extends PropertiesContextSettings implements IMVCContextVar {
-
+	/* 数据源 */
+	private DataSource dataSource;
+	/* 任务 */
 	private ITaskExecutor taskExecutor;
 
-	private DataSource dataSource;
-
-	private MVCSettings settings;
-
 	@Override
-	public void onInit(final IApplicationContextBase context) throws Exception {
+	public void onInit(final IApplicationContext context) throws Exception {
 		super.onInit(context);
 
-		settings = createMVCSettings();
-		settings.onInit(context);
+		// 创建mvc配置
+		if (context instanceof AbstractApplicationContext) {
+			createMVCSettings((AbstractApplicationContext) context);
+		}
 
 		// 初始化配置环境
-		final File settingsFile = new File(settings.getRealPath("/WEB-INF/base.properties"));
+		final File settingsFile = new File(MVCUtils.getRealPath("/WEB-INF/base.properties"));
 		if (!settingsFile.exists()) {
 			load(ClassUtils.getResourceAsStream("base.properties"));
 		} else {
 			load(new FileInputStream(settingsFile));
 		}
 
-		setHomeFileDir(new File(settings.getRealPath("/")));
+		setHomeFileDir(new File(MVCUtils.getRealPath("/")));
 	}
 
-	protected MVCSettings createMVCSettings() {
-		return new _MVCSettings(this);
-	}
-
-	private final SymmetricEncrypt des = createEncrypt();
-
-	protected SymmetricEncrypt createEncrypt() {
-		return new SymmetricEncrypt("simpleframework.net");
+	protected MVCSettings createMVCSettings(final IMVCContext context) {
+		final MVCSettings settings = new _MVCSettings(context);
+		settings.setContextSettings(this);
+		return settings;
 	}
 
 	public static void main(final String[] args) {
@@ -66,6 +62,12 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 		// test...
 		System.out.println(des.encrypt("root"));
 		System.out.println(des.encrypt("root"));
+	}
+
+	private final SymmetricEncrypt des = createEncrypt();
+
+	protected SymmetricEncrypt createEncrypt() {
+		return new SymmetricEncrypt("simpleframework.net");
 	}
 
 	public DataSource getDataSource() {
@@ -137,71 +139,39 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 	public static final String MVC_HOMEPATH = "mvc.homepath";
 	public static final String MVC_IEWARNPATH = "mvc.iewarnpath";
 
-	public static class _MVCSettings extends MVCSettings {
-		private final ApplicationSettings settings;
-
-		public _MVCSettings(final ApplicationSettings settings) {
-			this.settings = settings;
-		}
-
-		@Override
-		public boolean isDebug() {
-			return settings.isDebug();
-		}
-
-		@Override
-		public String getCharset() {
-			return settings.getCharset();
-		}
-
-		@Override
-		public String getContextNo() {
-			return settings.getContextNo();
-		}
-
-		@Override
-		public File getHomeFileDir() {
-			return settings.homeDir != null ? settings.homeDir : super.getHomeFileDir();
+	protected class _MVCSettings extends MVCSettings {
+		public _MVCSettings(final IMVCContext context) {
+			super(context);
 		}
 
 		@Override
 		public boolean isResourceCompress() {
-			return settings.getBoolProperty(CTX_RESOURCECOMPRESS, super.isResourceCompress());
+			return getBoolProperty(CTX_RESOURCECOMPRESS, super.isResourceCompress());
 		}
 
 		@Override
 		public int getServerPort(final PageRequestResponse rRequest) {
-			return settings.getIntProperty(MVC_SERVERPORT, super.getServerPort(rRequest));
-		}
-
-		@Override
-		public String getLoginPath(final PageRequestResponse rRequest) {
-			return settings.getProperty(MVC_LOGINPATH, super.getLoginPath(rRequest));
-		}
-
-		@Override
-		public String getHomePath(final PageRequestResponse rRequest) {
-			return settings.getProperty(MVC_HOMEPATH, super.getHomePath(rRequest));
-		}
-
-		@Override
-		public String getFilterPath() {
-			return settings.getProperty(MVC_FILTERPATH, super.getFilterPath());
+			return getIntProperty(MVC_SERVERPORT, super.getServerPort(rRequest));
 		}
 
 		@Override
 		public String getIEWarnPath(final PageRequestResponse rRequest) {
-			return settings.getProperty(MVC_IEWARNPATH, super.getIEWarnPath(rRequest));
+			return getProperty(MVC_IEWARNPATH, super.getIEWarnPath(rRequest));
 		}
 
 		@Override
-		public Map<String, String> getFilterPackages() {
-			return packages;
+		public String getLoginPath(final PageRequestResponse rRequest) {
+			return getProperty(MVC_LOGINPATH, super.getLoginPath(rRequest));
 		}
 
-		private final Map<String, String> packages = new LinkedHashMap<String, String>();
-		{
-			packages.put("/sf", "net.simpleframework");
+		@Override
+		public String getHomePath(final PageRequestResponse rRequest) {
+			return getProperty(MVC_HOMEPATH, super.getHomePath(rRequest));
+		}
+
+		@Override
+		public String getFilterPath() {
+			return getProperty(MVC_FILTERPATH, super.getFilterPath());
 		}
 	}
 }

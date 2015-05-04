@@ -13,6 +13,7 @@ import net.simpleframework.ado.db.cache.MapDbEntityManager;
 import net.simpleframework.common.ClassUtils;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.object.ObjectFactory;
+import net.simpleframework.ctx.ContextUtils;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleContext;
 import net.simpleframework.ctx.ModuleContextFactory;
@@ -31,26 +32,25 @@ import org.hsqldb.Server;
 public abstract class AbstractApplicationContext extends MVCContext implements IApplicationContext {
 
 	@Override
+	protected void onBeforeInit() throws Exception {
+		super.onBeforeInit();
+		getContextSettings().onInit(this);
+	}
+
+	@Override
+	protected void onAfterInit() throws Exception {
+		super.onAfterInit();
+		// 启动测试用的hsql数据库,生产环境不需要
+		doHsql();
+		ContextUtils.doInit(this);
+	}
+
+	@Override
 	public ApplicationSettings getContextSettings() {
 		/**
 		 * 定义配置
 		 */
 		return singleton(ApplicationSettings.class);
-	}
-
-	@Override
-	public Collection<IModuleContext> allModules() {
-		return ModuleContextFactory.allModules();
-	}
-
-	@Override
-	public <T extends IModuleContext> T getModuleContext(final Class<T> mClass) {
-		return ModuleContextFactory.get(mClass);
-	}
-
-	@Override
-	public IModuleContext getModuleContext(final String module) {
-		return ModuleContextFactory.get(module);
 	}
 
 	@Override
@@ -78,9 +78,7 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 
 	@Override
 	public IADOManagerFactory getADOManagerFactory(final DataSource dataSource) {
-		/**
-		 * 这里提供一个全局的IADOManagerFactory实现,各context可有自己的
-		 */
+		// 这里提供一个全局的IADOManagerFactory实现,各context可有自己的
 		DbManagerFactory factory = mFactoryCache.get(dataSource);
 		if (factory == null) {
 			mFactoryCache.put(dataSource, factory = new DbManagerFactory(dataSource) {
@@ -128,13 +126,6 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		}
 	}
 
-	@Override
-	protected void onApplicationInit() throws Exception {
-		// 启动测试用的hsql数据库,生产环境不需要
-		doHsql();
-		super.onApplicationInit();
-	}
-
 	protected void doHsql() {
 		final ApplicationSettings settings = getContextSettings();
 		if (!settings.getBoolProperty("hsql.start")) {
@@ -152,5 +143,20 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		} catch (final Exception e1) {
 			getLog().warn(e1);
 		}
+	}
+
+	@Override
+	public Collection<IModuleContext> allModules() {
+		return ModuleContextFactory.allModules();
+	}
+
+	@Override
+	public <T extends IModuleContext> T getModuleContext(final Class<T> mClass) {
+		return ModuleContextFactory.get(mClass);
+	}
+
+	@Override
+	public IModuleContext getModuleContext(final String module) {
+		return ModuleContextFactory.get(module);
 	}
 }
