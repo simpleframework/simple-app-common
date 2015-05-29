@@ -54,11 +54,16 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 	}
 
 	@Override
-	public DataSource getDataSource() {
+	public DataSource getDataSource(final String key) {
 		/**
 		 * 定义数据源,每个ModuleContext可以设置自己的数据源
 		 */
-		return getContextSettings().getDataSource();
+		return getContextSettings().getDataSource(key);
+	}
+
+	@Override
+	public DataSource getDataSource() {
+		return getDataSource(ApplicationSettings.DBPOOL);
 	}
 
 	@Override
@@ -81,17 +86,15 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		// 这里提供一个全局的IADOManagerFactory实现,各context可有自己的
 		DbManagerFactory factory = mFactoryCache.get(dataSource);
 		if (factory == null) {
+			final ApplicationSettings settings = getContextSettings();
 			mFactoryCache.put(dataSource, factory = new DbManagerFactory(dataSource) {
 				@Override
 				public IDbEntityManager<?> createEntityManager(final Class<?> beanClass) {
 					IDbEntityManager<?> eManager = null;
-					final String db = getContextSettings().getProperty(
-							ApplicationSettings.DBENTITYMANAGER_HANDLER);
+					final String db = settings.getProperty(settings.getDsKey(dataSource) + "."
+							+ ApplicationSettings.DBPOOL_ENTITYMANAGER);
 					if (StringUtils.hasText(db)) {
-						try {
-							eManager = (IDbEntityManager<?>) ObjectFactory.create(ClassUtils.forName(db));
-						} catch (final ClassNotFoundException e) {
-						}
+						eManager = (IDbEntityManager<?>) ObjectFactory.create(db);
 					}
 					if (eManager == null) {
 						eManager = ObjectFactory.create(MapDbEntityManager.class);
@@ -102,6 +105,11 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 			});
 		}
 		return factory;
+	}
+
+	@Override
+	public IADOManagerFactory getADOManagerFactory(final String key) {
+		return getADOManagerFactory(getDataSource(key));
 	}
 
 	protected void onCreateEntityManager(final IDbEntityManager<?> eManager) {

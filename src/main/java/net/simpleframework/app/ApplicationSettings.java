@@ -2,6 +2,8 @@ package net.simpleframework.app;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -9,6 +11,8 @@ import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.ClassUtils;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.SymmetricEncrypt;
+import net.simpleframework.common.object.ObjectFactory;
+import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.settings.PropertiesContextSettings;
 import net.simpleframework.ctx.task.ITaskExecutor;
@@ -27,7 +31,7 @@ import net.simpleframework.mvc.PageRequestResponse;
  */
 public class ApplicationSettings extends PropertiesContextSettings implements IMVCContextVar {
 	/* 数据源 */
-	private DataSource dataSource;
+	private final Map<String, DataSource> dsCache = new HashMap<String, DataSource>();
 	/* 任务 */
 	private ITaskExecutor taskExecutor;
 
@@ -70,28 +74,42 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 		return new SymmetricEncrypt("simpleframework.net");
 	}
 
-	public DataSource getDataSource() {
+	public String getDsKey(final DataSource dataSource) {
+		for (final Map.Entry<String, DataSource> e : dsCache.entrySet()) {
+			if (ObjectUtils.objectEquals(e.getValue(), dataSource)) {
+				return e.getKey();
+			}
+		}
+		return DBPOOL;
+	}
+
+	public DataSource getDataSource(final String key) {
+		DataSource dataSource = dsCache.get(key);
 		if (dataSource == null) {
-			try {
-				dataSource = (DataSource) ClassUtils.forName(getProperty(DBPOOL_PROVIDER))
-						.newInstance();
-				for (final String prop : StringUtils.split(getProperty(DBPOOL_PROPERTIES))) {
-					String val = getProperty(DBPOOL + "." + prop);
-					if (val == null) {
-						val = getProperty("~" + DBPOOL + "." + prop);
-						if (val != null) {
-							val = des.decrypt(val);
-						}
-					}
-					if (val != null) {
-						BeanUtils.setProperty(dataSource, prop, val);
-					}
+			dsCache.put(key,
+					dataSource = (DataSource) ObjectFactory.create(getProperty(DBPOOL_PROVIDER)));
+			for (final String prop : StringUtils.split(getProperty(DBPOOL_PROPERTIES))) {
+				final String val = getDsProperty(key, prop);
+				if (val != null) {
+					BeanUtils.setProperty(dataSource, prop, val);
 				}
-			} catch (final Exception e) {
-				getLog().error(e);
 			}
 		}
 		return dataSource;
+	}
+
+	private String getDsProperty(final String key, final String prop) {
+		String val = getProperty(key + "." + prop);
+		if (val == null) {
+			val = getProperty("~" + key + "." + prop);
+			if (val != null) {
+				val = des.decrypt(val);
+			}
+		}
+		if (val == null && !DBPOOL.equals(key)) {
+			val = getDsProperty(DBPOOL, prop);
+		}
+		return val;
 	}
 
 	public ITaskExecutor getTaskExecutor() {
@@ -121,17 +139,18 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 		return getProperty(CTX_NO, super.getContextNo());
 	}
 
-	public static final String DBPOOL = "dbpool";
 	public static final String DBPOOL_PROVIDER = "dbpool.provider";
 	public static final String DBPOOL_PROPERTIES = "dbpool.properties";
+
+	public static final String DBPOOL = "dbpool";
+
+	public static final String DBPOOL_ENTITYMANAGER = "entitymanager";
 
 	public static final String CTX_CHARSET = "ctx.charset";
 	public static final String CTX_RESOURCECOMPRESS = "ctx.resourcecompress";
 	public static final String CTX_PERMISSIONHANDLER = "ctx.permissionhandler";
 	public static final String CTX_DEBUG = "ctx.debug";
 	public static final String CTX_NO = "ctx.no";
-
-	public static final String DBENTITYMANAGER_HANDLER = "db.entitymanager";
 
 	public static final String MVC_SERVERPORT = "mvc.serverport";
 	public static final String MVC_FILTERPATH = "mvc.filterpath";
