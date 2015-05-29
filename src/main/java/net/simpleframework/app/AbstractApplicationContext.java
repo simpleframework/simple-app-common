@@ -18,6 +18,7 @@ import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleContext;
 import net.simpleframework.ctx.ModuleContextFactory;
 import net.simpleframework.ctx.permission.IPermissionHandler;
+import net.simpleframework.ctx.settings.IContextSettingsConst;
 import net.simpleframework.ctx.task.ITaskExecutor;
 import net.simpleframework.mvc.MVCContext;
 
@@ -63,7 +64,7 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 
 	@Override
 	public DataSource getDataSource() {
-		return getDataSource(ApplicationSettings.DBPOOL);
+		return getDataSource(IContextSettingsConst.DBPOOL);
 	}
 
 	@Override
@@ -92,7 +93,7 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 				public IDbEntityManager<?> createEntityManager(final Class<?> beanClass) {
 					IDbEntityManager<?> eManager = null;
 					final String db = settings.getProperty(settings.getDsKey(dataSource) + "."
-							+ ApplicationSettings.DBPOOL_ENTITYMANAGER);
+							+ IContextSettingsConst.DBPOOL_ENTITYMANAGER);
 					if (StringUtils.hasText(db)) {
 						eManager = (IDbEntityManager<?>) ObjectFactory.create(db);
 					}
