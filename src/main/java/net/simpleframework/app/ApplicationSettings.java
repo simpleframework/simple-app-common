@@ -14,6 +14,7 @@ import net.simpleframework.common.SymmetricEncrypt;
 import net.simpleframework.common.object.ObjectFactory;
 import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.ctx.IApplicationContext;
+import net.simpleframework.ctx.settings.IContextSettingsConst;
 import net.simpleframework.ctx.settings.PropertiesContextSettings;
 import net.simpleframework.ctx.task.ITaskExecutor;
 import net.simpleframework.ctx.task.TaskExecutor;
@@ -29,7 +30,8 @@ import net.simpleframework.mvc.PageRequestResponse;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class ApplicationSettings extends PropertiesContextSettings implements IMVCContextVar {
+public class ApplicationSettings extends PropertiesContextSettings implements
+		IContextSettingsConst, IMVCContextVar {
 	/* 数据源 */
 	private final Map<String, DataSource> dsCache = new HashMap<String, DataSource>();
 	/* 任务 */
@@ -138,25 +140,6 @@ public class ApplicationSettings extends PropertiesContextSettings implements IM
 	public String getContextNo() {
 		return getProperty(CTX_NO, super.getContextNo());
 	}
-
-	public static final String DBPOOL_PROVIDER = "dbpool.provider";
-	public static final String DBPOOL_PROPERTIES = "dbpool.properties";
-
-	public static final String DBPOOL = "dbpool";
-
-	public static final String DBPOOL_ENTITYMANAGER = "entitymanager";
-
-	public static final String CTX_CHARSET = "ctx.charset";
-	public static final String CTX_RESOURCECOMPRESS = "ctx.resourcecompress";
-	public static final String CTX_PERMISSIONHANDLER = "ctx.permissionhandler";
-	public static final String CTX_DEBUG = "ctx.debug";
-	public static final String CTX_NO = "ctx.no";
-
-	public static final String MVC_SERVERPORT = "mvc.serverport";
-	public static final String MVC_FILTERPATH = "mvc.filterpath";
-	public static final String MVC_LOGINPATH = "mvc.loginpath";
-	public static final String MVC_HOMEPATH = "mvc.homepath";
-	public static final String MVC_IEWARNPATH = "mvc.iewarnpath";
 
 	protected class _MVCSettings extends MVCSettings {
 		public _MVCSettings(final IMVCContext context) {
