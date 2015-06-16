@@ -2,6 +2,7 @@ package net.simpleframework.app;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import net.simpleframework.common.SymmetricEncrypt;
 import net.simpleframework.common.object.ObjectFactory;
 import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.ctx.IApplicationContext;
+import net.simpleframework.ctx.settings.ContextSettings;
 import net.simpleframework.ctx.settings.IContextSettingsConst;
 import net.simpleframework.ctx.settings.PropertiesContextSettings;
 import net.simpleframework.ctx.task.ITaskExecutor;
@@ -58,9 +60,7 @@ public class ApplicationSettings extends PropertiesContextSettings implements
 	}
 
 	protected MVCSettings createMVCSettings(final IMVCContext context) {
-		final MVCSettings settings = new _MVCSettings(context);
-		settings.setContextSettings(this);
-		return settings;
+		return new _MVCSettings(context, this);
 	}
 
 	public static void main(final String[] args) {
@@ -136,44 +136,54 @@ public class ApplicationSettings extends PropertiesContextSettings implements
 		return getProperty(CTX_CHARSET, super.getCharset());
 	}
 
+	private static String pid;
+	static {
+		final String name = ManagementFactory.getRuntimeMXBean().getName();
+		pid = name.substring(0, name.indexOf("@"));
+	}
+
 	@Override
 	public String getContextNo() {
-		return getProperty(CTX_NO, super.getContextNo());
+		// 获取服务编号
+		return getProperty(CTX_NO, pid);
 	}
 
 	protected class _MVCSettings extends MVCSettings {
-		public _MVCSettings(final IMVCContext context) {
-			super(context);
+		private final ApplicationSettings _settings;
+
+		public _MVCSettings(final IMVCContext context, final ContextSettings applicationSettings) {
+			super(context, applicationSettings);
+			_settings = (ApplicationSettings) applicationSettings;
 		}
 
 		@Override
 		public boolean isResourceCompress() {
-			return getBoolProperty(CTX_RESOURCECOMPRESS, super.isResourceCompress());
+			return _settings.getBoolProperty(CTX_RESOURCECOMPRESS, super.isResourceCompress());
 		}
 
 		@Override
 		public int getServerPort(final PageRequestResponse rRequest) {
-			return getIntProperty(MVC_SERVERPORT, super.getServerPort(rRequest));
+			return _settings.getIntProperty(MVC_SERVERPORT, super.getServerPort(rRequest));
 		}
 
 		@Override
 		public String getIEWarnPath(final PageRequestResponse rRequest) {
-			return getProperty(MVC_IEWARNPATH, super.getIEWarnPath(rRequest));
+			return _settings.getProperty(MVC_IEWARNPATH, super.getIEWarnPath(rRequest));
 		}
 
 		@Override
 		public String getLoginPath(final PageRequestResponse rRequest) {
-			return getProperty(MVC_LOGINPATH, super.getLoginPath(rRequest));
+			return _settings.getProperty(MVC_LOGINPATH, super.getLoginPath(rRequest));
 		}
 
 		@Override
 		public String getHomePath(final PageRequestResponse rRequest) {
-			return getProperty(MVC_HOMEPATH, super.getHomePath(rRequest));
+			return _settings.getProperty(MVC_HOMEPATH, super.getHomePath(rRequest));
 		}
 
 		@Override
 		public String getFilterPath() {
-			return getProperty(MVC_FILTERPATH, super.getFilterPath());
+			return _settings.getProperty(MVC_FILTERPATH, super.getFilterPath());
 		}
 	}
 }
