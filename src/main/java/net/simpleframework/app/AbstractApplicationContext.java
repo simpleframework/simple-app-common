@@ -35,6 +35,7 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 	@Override
 	protected void onBeforeInit() throws Exception {
 		super.onBeforeInit();
+
 		getContextSettings().onInit(this);
 	}
 

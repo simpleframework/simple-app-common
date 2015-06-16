@@ -4,12 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.ClassUtils;
+import net.simpleframework.common.I18n;
+import net.simpleframework.common.I18n.ILocaleHandler;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.SymmetricEncrypt;
 import net.simpleframework.common.object.ObjectFactory;
@@ -57,6 +60,13 @@ public class ApplicationSettings extends PropertiesContextSettings implements
 		}
 
 		setHomeFileDir(new File(MVCUtils.getRealPath("/")));
+
+		I18n.setLocaleHandler(new ILocaleHandler() {
+			@Override
+			public Locale getLocale() {
+				return ApplicationSettings.this.getLocale();
+			}
+		});
 	}
 
 	protected MVCSettings createMVCSettings(final IMVCContext context) {
@@ -129,6 +139,21 @@ public class ApplicationSettings extends PropertiesContextSettings implements
 	@Override
 	public boolean isDebug() {
 		return getBoolProperty(CTX_DEBUG, super.isDebug());
+	}
+
+	private Locale _locale;
+
+	@Override
+	public Locale getLocale() {
+		if (_locale == null) {
+			final String[] arr = StringUtils.split(getProperty(CTX_LOCALE), "_");
+			if (arr.length > 1) {
+				_locale = new Locale(arr[0], arr[1]);
+			} else if (arr.length > 0) {
+				_locale = new Locale(arr[0]);
+			}
+		}
+		return _locale != null ? _locale : super.getLocale();
 	}
 
 	@Override
