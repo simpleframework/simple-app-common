@@ -76,8 +76,8 @@ public class ApplicationSettings extends PropertiesContextSettings implements
 	public static void main(final String[] args) {
 		final SymmetricEncrypt des = new SymmetricEncrypt("simpleframework.net");
 		// test...
-		System.out.println(des.encrypt("root"));
-		System.out.println(des.encrypt("root"));
+		oprintln(des.encrypt("root"));
+		oprintln(des.encrypt("root"));
 	}
 
 	private final SymmetricEncrypt des = createEncrypt();
