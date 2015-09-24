@@ -10,7 +10,9 @@ import net.simpleframework.ado.IADOManagerFactory;
 import net.simpleframework.ado.db.DbManagerFactory;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.cache.MapDbEntityManager;
+import net.simpleframework.ado.db.jdbc.DefaultJdbcProvider;
 import net.simpleframework.common.ClassUtils;
+import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.object.ObjectFactory;
 import net.simpleframework.ctx.ContextUtils;
@@ -90,6 +92,19 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		if (factory == null) {
 			final ApplicationSettings settings = getContextSettings();
 			mFactoryCache.put(dataSource, factory = new DbManagerFactory(dataSource) {
+
+				@Override
+				protected DefaultJdbcProvider createJdbcProvider(final DataSource dataSource) {
+					return new DefaultJdbcProvider(dataSource) {
+						@Override
+						protected long getSlowTimeMillis() {
+							return Convert.toLong(
+									settings.getProperty(IContextSettingsConst.PRINT_SQL_TIMEMILLIS),
+									super.getSlowTimeMillis());
+						}
+					};
+				}
+
 				@Override
 				public IDbEntityManager<?> createEntityManager(final Class<?> beanClass) {
 					IDbEntityManager<?> eManager = null;
