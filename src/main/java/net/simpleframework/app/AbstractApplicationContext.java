@@ -133,8 +133,8 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 	}
 
 	@Override
-	public int getDomain() {
-		return 0;
+	public String getDomain() {
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
