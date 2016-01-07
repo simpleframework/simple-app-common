@@ -14,13 +14,11 @@
     <dependency>
       <groupId>net.simpleframework</groupId>
       <artifactId>simple-ado</artifactId>
-      <version>${simple.ado}</version>
     </dependency>
 
     <dependency>
       <groupId>net.simpleframework</groupId>
       <artifactId>simple-mvc-core</artifactId>
-      <version>${simple.mvc.core}</version>
     </dependency>
 
     <dependency>
