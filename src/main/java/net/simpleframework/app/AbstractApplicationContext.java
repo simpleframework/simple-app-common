@@ -14,6 +14,7 @@ import net.simpleframework.ado.db.jdbc.DefaultJdbcProvider;
 import net.simpleframework.common.ClassUtils;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
+import net.simpleframework.common.Version;
 import net.simpleframework.common.object.ObjectFactory;
 import net.simpleframework.ctx.ContextUtils;
 import net.simpleframework.ctx.IApplicationContext;
@@ -183,5 +184,14 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 	@Override
 	public IModuleContext getModuleContext(final String module) {
 		return ModuleContextFactory.get(module);
+	}
+
+	@Override
+	public Version getVersion() {
+		final String ver = getContextSettings().getProperty(IContextSettingsConst.CTX_VERSION);
+		if (StringUtils.hasText(ver)) {
+			return Version.getVersion(ver);
+		}
+		return super.getVersion();
 	}
 }
