@@ -24,7 +24,6 @@ import net.simpleframework.ctx.settings.PropertiesContextSettings;
 import net.simpleframework.ctx.task.ITaskExecutor;
 import net.simpleframework.ctx.task.TaskExecutor;
 import net.simpleframework.mvc.IMVCContext;
-import net.simpleframework.mvc.IMVCContextVar;
 import net.simpleframework.mvc.MVCSettings;
 import net.simpleframework.mvc.MVCUtils;
 import net.simpleframework.mvc.PageRequestResponse;
@@ -35,8 +34,7 @@ import net.simpleframework.mvc.PageRequestResponse;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class ApplicationSettings extends PropertiesContextSettings implements
-		IContextSettingsConst, IMVCContextVar {
+public class ApplicationSettings extends PropertiesContextSettings implements IContextSettingsConst {
 	/* 数据源 */
 	private final Map<String, DataSource> dsCache = new HashMap<String, DataSource>();
 	/* 任务 */
