@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.hsqldb.Server;
+
 import net.simpleframework.ado.IADOManagerFactory;
 import net.simpleframework.ado.db.DbManagerFactory;
 import net.simpleframework.ado.db.IDbEntityManager;
@@ -19,13 +21,13 @@ import net.simpleframework.common.object.ObjectFactory;
 import net.simpleframework.ctx.ContextUtils;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleContext;
+import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.ModuleContextFactory;
+import net.simpleframework.ctx.ModuleRefUtils;
 import net.simpleframework.ctx.permission.IPermissionHandler;
 import net.simpleframework.ctx.settings.IContextSettingsConst;
 import net.simpleframework.ctx.task.ITaskExecutor;
 import net.simpleframework.mvc.MVCContext;
-
-import org.hsqldb.Server;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -38,6 +40,9 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 	@Override
 	protected void onBeforeInit() throws Exception {
 		super.onBeforeInit();
+
+		// 初始化IModuleRef
+		ModuleRefUtils.doRefInit(this);
 
 		getContextSettings().onInit(this);
 	}
@@ -145,8 +150,8 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		 * 定义权限的实现类
 		 */
 		try {
-			return (Class<? extends IPermissionHandler>) ClassUtils.forName(getContextSettings()
-					.getPermissionHandler());
+			return (Class<? extends IPermissionHandler>) ClassUtils
+					.forName(getContextSettings().getPermissionHandler());
 		} catch (final ClassNotFoundException e) {
 			return super.getPagePermissionHandler();
 		}
@@ -193,5 +198,10 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 			return Version.getVersion(ver);
 		}
 		return super.getVersion();
+	}
+
+	@Override
+	public IModuleRef getPDFRef() {
+		return ModuleRefUtils.getRef("net.simpleframework.module.pdf.web.PDFWebRef");
 	}
 }
