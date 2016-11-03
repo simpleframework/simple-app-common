@@ -1,9 +1,11 @@
 package net.simpleframework.app;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.FilterChain;
 import javax.sql.DataSource;
 
 import org.hsqldb.Server;
@@ -11,12 +13,14 @@ import org.hsqldb.Server;
 import net.simpleframework.ado.IADOManagerFactory;
 import net.simpleframework.ado.db.DbManagerFactory;
 import net.simpleframework.ado.db.IDbEntityManager;
+import net.simpleframework.ado.db.cache.IDbEntityCache;
 import net.simpleframework.ado.db.cache.MapDbEntityManager;
 import net.simpleframework.ado.db.jdbc.DefaultJdbcProvider;
 import net.simpleframework.common.ClassUtils;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.Version;
+import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.object.ObjectFactory;
 import net.simpleframework.ctx.ContextUtils;
 import net.simpleframework.ctx.IApplicationContext;
@@ -27,12 +31,15 @@ import net.simpleframework.ctx.ModuleRefUtils;
 import net.simpleframework.ctx.permission.IPermissionHandler;
 import net.simpleframework.ctx.settings.IContextSettingsConst;
 import net.simpleframework.ctx.task.ITaskExecutor;
+import net.simpleframework.mvc.IFilterListener;
 import net.simpleframework.mvc.MVCContext;
+import net.simpleframework.mvc.PageRequestResponse;
 
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class AbstractApplicationContext extends MVCContext implements IApplicationContext {
@@ -50,6 +57,9 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 	@Override
 	protected void onAfterInit() throws Exception {
 		super.onAfterInit();
+
+		addFilterListener(new ReqCacheFilterListener());
+
 		// 启动测试用的hsql数据库,生产环境不需要
 		doHsql();
 		ContextUtils.doInit(this);
@@ -203,5 +213,16 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 	@Override
 	public IModuleRef getPDFRef() {
 		return ModuleRefUtils.getRef("net.simpleframework.module.pdf.web.PDFWebRef");
+	}
+
+	public class ReqCacheFilterListener implements IFilterListener {
+
+		@Override
+		public EFilterResult doFilter(final PageRequestResponse rRequest,
+				final FilterChain filterChain) throws IOException {
+			// redis 缓存
+			IDbEntityCache.REQUEST_THREAD_CACHE.set(new KVMap());
+			return EFilterResult.SUCCESS;
+		}
 	}
 }
