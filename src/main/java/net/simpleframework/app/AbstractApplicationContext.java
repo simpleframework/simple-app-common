@@ -52,13 +52,13 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		ModuleRefUtils.doRefInit(this);
 
 		getContextSettings().onInit(this);
+
+		addFilterListener(new ReqCacheFilterListener());
 	}
 
 	@Override
 	protected void onAfterInit() throws Exception {
 		super.onAfterInit();
-
-		addFilterListener(new ReqCacheFilterListener());
 
 		// 启动测试用的hsql数据库,生产环境不需要
 		doHsql();
@@ -221,7 +221,11 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		public EFilterResult doFilter(final PageRequestResponse rRequest,
 				final FilterChain filterChain) throws IOException {
 			// redis 缓存
-			IDbEntityCache.REQUEST_THREAD_CACHE.set(new KVMap());
+			KVMap kv = (KVMap) rRequest.getSessionAttr("REQUEST_THREAD_CACHE");
+			if (kv == null || rRequest.isHttpRequest()) {
+				rRequest.setSessionAttr("REQUEST_THREAD_CACHE", kv = new KVMap());
+			}
+			IDbEntityCache.REQUEST_THREAD_CACHE.set(kv);
 			return EFilterResult.SUCCESS;
 		}
 	}
