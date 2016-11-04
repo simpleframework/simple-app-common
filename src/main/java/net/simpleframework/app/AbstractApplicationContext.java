@@ -222,7 +222,7 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 				final FilterChain filterChain) throws IOException {
 			// redis 缓存
 			KVMap kv = (KVMap) rRequest.getSessionAttr("REQUEST_THREAD_CACHE");
-			if (kv == null || rRequest.isHttpRequest()) {
+			if (kv == null || rRequest.isHttpRequest() || rRequest.isAjaxRequest()) {
 				rRequest.setSessionAttr("REQUEST_THREAD_CACHE", kv = new KVMap());
 			}
 			IDbEntityCache.REQUEST_THREAD_CACHE.set(kv);
