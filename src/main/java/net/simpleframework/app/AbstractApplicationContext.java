@@ -52,8 +52,6 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		ModuleRefUtils.doRefInit(this);
 
 		getContextSettings().onInit(this);
-
-		addFilterListener(new ReqCacheFilterListener());
 	}
 
 	@Override
