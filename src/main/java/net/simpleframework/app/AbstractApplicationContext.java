@@ -1,5 +1,6 @@
 package net.simpleframework.app;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,8 +8,6 @@ import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.sql.DataSource;
-
-import org.hsqldb.Server;
 
 import net.simpleframework.ado.IADOManagerFactory;
 import net.simpleframework.ado.db.DbManagerFactory;
@@ -33,7 +32,10 @@ import net.simpleframework.ctx.settings.IContextSettingsConst;
 import net.simpleframework.ctx.task.ITaskExecutor;
 import net.simpleframework.mvc.IFilterListener;
 import net.simpleframework.mvc.MVCContext;
+import net.simpleframework.mvc.MVCUtils;
 import net.simpleframework.mvc.PageRequestResponse;
+
+import org.hsqldb.Server;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -158,8 +160,8 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		 * 定义权限的实现类
 		 */
 		try {
-			return (Class<? extends IPermissionHandler>) ClassUtils
-					.forName(getContextSettings().getPermissionHandler());
+			return (Class<? extends IPermissionHandler>) ClassUtils.forName(getContextSettings()
+					.getPermissionHandler());
 		} catch (final ClassNotFoundException e) {
 			return super.getPagePermissionHandler();
 		}
@@ -211,6 +213,16 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 	@Override
 	public IModuleRef getPDFRef() {
 		return ModuleRefUtils.getRef("net.simpleframework.module.pdf.web.PDFWebRef");
+	}
+
+	private File rootDir;
+
+	@Override
+	public File getRootDir() {
+		if (rootDir == null) {
+			rootDir = new File(MVCUtils.getRealPath("/"));
+		}
+		return rootDir;
 	}
 
 	public class ReqCacheFilterListener implements IFilterListener {

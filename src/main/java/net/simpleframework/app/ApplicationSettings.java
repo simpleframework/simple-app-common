@@ -34,8 +34,7 @@ import net.simpleframework.mvc.PageRequestResponse;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class ApplicationSettings extends PropertiesContextSettings
-		implements IContextSettingsConst {
+public class ApplicationSettings extends PropertiesContextSettings implements IContextSettingsConst {
 	/* 数据源 */
 	private final Map<String, DataSource> dsCache = new HashMap<String, DataSource>();
 	/* 任务 */
@@ -57,8 +56,6 @@ public class ApplicationSettings extends PropertiesContextSettings
 		} else {
 			load(new FileInputStream(settingsFile));
 		}
-
-		setHomeFileDir(new File(MVCUtils.getRealPath("/")));
 
 		I18n.setLocaleHandler(new ILocaleHandler() {
 			@Override
