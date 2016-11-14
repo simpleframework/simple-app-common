@@ -34,7 +34,8 @@ import net.simpleframework.mvc.PageRequestResponse;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class ApplicationSettings extends PropertiesContextSettings implements IContextSettingsConst {
+public class ApplicationSettings extends PropertiesContextSettings
+		implements IContextSettingsConst {
 	/* 数据源 */
 	private final Map<String, DataSource> dsCache = new HashMap<String, DataSource>();
 	/* 任务 */

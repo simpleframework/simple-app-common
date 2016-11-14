@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.servlet.FilterChain;
 import javax.sql.DataSource;
 
+import org.hsqldb.Server;
+
 import net.simpleframework.ado.IADOManagerFactory;
 import net.simpleframework.ado.db.DbManagerFactory;
 import net.simpleframework.ado.db.IDbEntityManager;
@@ -34,8 +36,6 @@ import net.simpleframework.mvc.IFilterListener;
 import net.simpleframework.mvc.MVCContext;
 import net.simpleframework.mvc.MVCUtils;
 import net.simpleframework.mvc.PageRequestResponse;
-
-import org.hsqldb.Server;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -160,8 +160,8 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		 * 定义权限的实现类
 		 */
 		try {
-			return (Class<? extends IPermissionHandler>) ClassUtils.forName(getContextSettings()
-					.getPermissionHandler());
+			return (Class<? extends IPermissionHandler>) ClassUtils
+					.forName(getContextSettings().getPermissionHandler());
 		} catch (final ClassNotFoundException e) {
 			return super.getPagePermissionHandler();
 		}
