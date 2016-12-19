@@ -71,12 +71,11 @@ public class ApplicationSettings extends PropertiesContextSettings
 		return new _MVCSettings(context, this);
 	}
 
-	public static void main(final String[] args) {
-		final SymmetricEncrypt des = new SymmetricEncrypt("simpleframework.net");
-		// test...
-		oprintln(des.encrypt("root"));
-		oprintln(des.encrypt("root"));
-	}
+	// public static void main(final String[] args) {
+	// final SymmetricEncrypt des = new SymmetricEncrypt("simpleframework.net");
+	// // test...
+	// oprintln(des.encrypt("root"));
+	// }
 
 	private final SymmetricEncrypt des = createEncrypt();
 
