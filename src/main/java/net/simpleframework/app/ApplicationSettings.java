@@ -77,7 +77,7 @@ public class ApplicationSettings extends PropertiesContextSettings
 	// oprintln(des.encrypt("root"));
 	// }
 
-	private final SymmetricEncrypt des = createEncrypt();
+	protected final SymmetricEncrypt des = createEncrypt();
 
 	protected SymmetricEncrypt createEncrypt() {
 		return new SymmetricEncrypt("simpleframework.net");
@@ -107,14 +107,19 @@ public class ApplicationSettings extends PropertiesContextSettings
 		return dataSource;
 	}
 
-	private String getDsProperty(final String key, final String prop) {
-		String val = getProperty(key + "." + prop);
+	public String getSProperty(final String key) {
+		String val = getProperty(key);
 		if (val == null) {
-			val = getProperty("~" + key + "." + prop);
+			val = getProperty("~" + key);
 			if (val != null) {
 				val = des.decrypt(val);
 			}
 		}
+		return val;
+	}
+
+	private String getDsProperty(final String key, final String prop) {
+		String val = getSProperty(key + "." + prop);
 		if (val == null && !DBPOOL.equals(key)) {
 			val = getDsProperty(DBPOOL, prop);
 		}
