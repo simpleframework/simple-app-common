@@ -98,7 +98,10 @@ public class ApplicationSettings extends PropertiesContextSettings
 			dsCache.put(key,
 					dataSource = (DataSource) ObjectFactory.create(getProperty(DBPOOL_PROVIDER)));
 			for (final String prop : StringUtils.split(getProperty(DBPOOL_PROPERTIES))) {
-				final String val = getDsProperty(key, prop);
+				String val = getDsProperty(key, prop);
+				if (!StringUtils.hasText(val)) {
+					val = getDsProperty(DBPOOL, prop);
+				}
 				if (val != null) {
 					BeanUtils.setProperty(dataSource, prop, val);
 				}
