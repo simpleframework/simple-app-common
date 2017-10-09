@@ -29,7 +29,6 @@ import net.simpleframework.ctx.IModuleContext;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.ModuleContextFactory;
 import net.simpleframework.ctx.ModuleRefUtils;
-import net.simpleframework.ctx.permission.Domain;
 import net.simpleframework.ctx.permission.IPermissionHandler;
 import net.simpleframework.ctx.settings.IContextSettingsConst;
 import net.simpleframework.ctx.task.ITaskExecutor;
@@ -84,11 +83,7 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 
 	@Override
 	public DataSource getDataSource() {
-		String key = getDomain();
-		if (!StringUtils.hasText(key)) {
-			key = IContextSettingsConst.DBPOOL;
-		}
-		return getDataSource(key);
+		return getDataSource(IContextSettingsConst.DBPOOL);
 	}
 
 	@Override
@@ -155,8 +150,7 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 
 	@Override
 	public String getDomain() {
-		final Domain domain = Domain.get();
-		return domain != null ? domain.getName() : null;
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
