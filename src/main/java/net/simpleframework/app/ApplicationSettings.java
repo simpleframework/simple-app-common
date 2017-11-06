@@ -38,7 +38,7 @@ import net.simpleframework.mvc.PageRequestResponse;
 public class ApplicationSettings extends PropertiesContextSettings
 		implements IContextSettingsConst {
 	/* 数据源 */
-	private final Map<String, DataSource> dsCache = new HashMap<String, DataSource>();
+	private final Map<String, DataSource> dsCache = new HashMap<>();
 	/* 任务 */
 	private ITaskExecutor taskExecutor;
 

@@ -99,7 +99,7 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 		return getADOManagerFactory(getDataSource());
 	}
 
-	private static Map<DataSource, DbManagerFactory> mFactoryCache = new HashMap<DataSource, DbManagerFactory>();
+	private static Map<DataSource, DbManagerFactory> mFactoryCache = new HashMap<>();
 
 	@Override
 	public IADOManagerFactory getADOManagerFactory(final DataSource dataSource) {
