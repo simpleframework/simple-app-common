@@ -27,5 +27,12 @@
       <version>2.2.9</version>
       <scope>provided</scope>
     </dependency>
+    
+    <!-- web容器包 -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 </project>
