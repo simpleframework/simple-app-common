@@ -1,12 +1,10 @@
 package net.simpleframework.app;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.FilterChain;
 import javax.sql.DataSource;
 
 import org.hsqldb.Server;
@@ -14,14 +12,12 @@ import org.hsqldb.Server;
 import net.simpleframework.ado.IADOManagerFactory;
 import net.simpleframework.ado.db.DbManagerFactory;
 import net.simpleframework.ado.db.IDbEntityManager;
-import net.simpleframework.ado.db.cache.IDbEntityCache;
 import net.simpleframework.ado.db.cache.MapDbEntityManager;
 import net.simpleframework.ado.db.jdbc.DefaultJdbcProvider;
 import net.simpleframework.common.ClassUtils;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.Version;
-import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.object.ObjectFactory;
 import net.simpleframework.ctx.ContextUtils;
 import net.simpleframework.ctx.IApplicationContext;
@@ -32,10 +28,8 @@ import net.simpleframework.ctx.ModuleRefUtils;
 import net.simpleframework.ctx.permission.IPermissionHandler;
 import net.simpleframework.ctx.settings.IContextSettingsConst;
 import net.simpleframework.ctx.task.ITaskExecutor;
-import net.simpleframework.mvc.IFilterListener;
 import net.simpleframework.mvc.MVCContext;
 import net.simpleframework.mvc.MVCUtils;
-import net.simpleframework.mvc.PageRequestResponse;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -223,20 +217,5 @@ public abstract class AbstractApplicationContext extends MVCContext implements I
 			rootDir = new File(MVCUtils.getRealPath("/"));
 		}
 		return rootDir;
-	}
-
-	public class ReqCacheFilterListener implements IFilterListener {
-
-		@Override
-		public EFilterResult doFilter(final PageRequestResponse rRequest,
-				final FilterChain filterChain) throws IOException {
-			// redis 缓存
-			KVMap kv = (KVMap) rRequest.getSessionAttr("REQUEST_THREAD_CACHE");
-			if (kv == null || rRequest.isHttpRequest() || rRequest.isAjaxRequest()) {
-				rRequest.setSessionAttr("REQUEST_THREAD_CACHE", kv = new KVMap());
-			}
-			IDbEntityCache.REQUEST_THREAD_CACHE.set(kv);
-			return EFilterResult.SUCCESS;
-		}
 	}
 }
