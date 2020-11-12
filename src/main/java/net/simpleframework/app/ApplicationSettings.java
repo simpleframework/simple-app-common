@@ -11,8 +11,6 @@ import javax.sql.DataSource;
 
 import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.ClassUtils;
-import net.simpleframework.common.I18n;
-import net.simpleframework.common.I18n.ILocaleHandler;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.SymmetricEncrypt;
 import net.simpleframework.common.object.ObjectFactory;
@@ -58,13 +56,6 @@ public class ApplicationSettings extends PropertiesContextSettings
 		} else {
 			load(new FileInputStream(settingsFile));
 		}
-
-		I18n.setLocaleHandler(new ILocaleHandler() {
-			@Override
-			public Locale getLocale() {
-				return ApplicationSettings.this.getLocale();
-			}
-		});
 	}
 
 	protected MVCSettings createMVCSettings(final IMVCContext context) {
