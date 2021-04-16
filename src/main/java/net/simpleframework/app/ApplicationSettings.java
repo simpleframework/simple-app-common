@@ -2,6 +2,7 @@ package net.simpleframework.app;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Locale;
@@ -36,9 +37,9 @@ import net.simpleframework.mvc.PageRequestResponse;
 public class ApplicationSettings extends PropertiesContextSettings
 		implements IContextSettingsConst {
 	/* 数据源 */
-	private final Map<String, DataSource> dsCache = new HashMap<>();
+	protected final Map<String, DataSource> dsCache = new HashMap<>();
 	/* 任务 */
-	private ITaskExecutor taskExecutor;
+	protected ITaskExecutor taskExecutor;
 
 	@Override
 	public void onInit(final IApplicationContext context) throws Exception {
@@ -50,6 +51,10 @@ public class ApplicationSettings extends PropertiesContextSettings
 		}
 
 		// 初始化配置环境
+		initBaseProperties(context);
+	}
+
+	protected void initBaseProperties(final IApplicationContext context) throws IOException {
 		final File settingsFile = new File(MVCUtils.getRealPath("/WEB-INF/base.properties"));
 		if (!settingsFile.exists()) {
 			load(ClassUtils.getResourceAsStream("base.properties"));
@@ -112,7 +117,7 @@ public class ApplicationSettings extends PropertiesContextSettings
 		return val;
 	}
 
-	private String getDsProperty(final String key, final String prop) {
+	protected String getDsProperty(final String key, final String prop) {
 		String val = getSProperty(key + "." + prop);
 		if (val == null && !DBPOOL.equals(key)) {
 			val = getDsProperty(DBPOOL, prop);
