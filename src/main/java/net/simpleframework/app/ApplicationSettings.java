@@ -2,6 +2,7 @@ package net.simpleframework.app;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Locale;
@@ -50,6 +51,10 @@ public class ApplicationSettings extends PropertiesContextSettings
 		}
 
 		// 初始化配置环境
+		initBaseProperties(context);
+	}
+
+	protected void initBaseProperties(final IApplicationContext context) throws IOException {
 		final File settingsFile = new File(MVCUtils.getRealPath("/WEB-INF/base.properties"));
 		if (!settingsFile.exists()) {
 			load(ClassUtils.getResourceAsStream("base.properties"));
